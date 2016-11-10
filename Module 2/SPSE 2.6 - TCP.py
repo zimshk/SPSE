@@ -9,8 +9,8 @@ import socket
 - Implement signals to ensure it automatically shuts down after a pre-configured duration, which is given via command line
 '''
 
-# alarm code snippet: https://docs.python.org/2/library/signal.html#module-signal
-# simple TCP server code from module 3-1
+# alarm code snippet: https://docs.python.org/3/library/signal.html#module-signal
+# simple TCP server code from SPSE Module 3-1
 
 def handler(signum, frame):
 	print('Signal handler called with signal'.format(signum))
