@@ -1,18 +1,8 @@
-import signal, os
-import sys
+#!/usr/bin/python
+
 import socket
 
-'''
-- Create a TCP server which listens to a port
-- Implement signals to ensure it automatically shuts down after a pre-configured duration, which is given via command line
-'''
-
-# alarm code snippet: https://docs.python.org/2/library/signal.html#module-signal
-# simple TCP server code from module 3-1
-
-def handler(signum, frame):
-	print('Signal handler called with signal'.format(signum))
-	raise OSError("Server stopped!")
+'''Create a simple Echo Server to handle 1 client'''
 
 def simple_server():
 	tcpSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -41,11 +31,4 @@ def simple_server():
 	print ("Closing connection...")
 	client.close()
 
-signal.signal(signal.SIGALRM, handler)
-# no error handling, because yolo
-signal.alarm(int(sys.argv[1]))
-
 simple_server()
-
-signal.alarm(0)          # Disable the alarm
-
