@@ -34,4 +34,4 @@ tcpSocket = simple_server(3, 8000)
 
 while True:
     client, address = tcpSocket.accept()
-    threading.Thread(target=echo_handler, args=(client, address)).start()
+    threading.Thread(target=echo_handler, (client, address)).start()
