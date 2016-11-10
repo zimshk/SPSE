@@ -1,3 +1,5 @@
+#!/usr/local/bin/python3
+
 import signal, os
 import sys
 import socket
