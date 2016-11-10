@@ -1,8 +1,8 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python3
 
 from ftplib import FTP
 import threading
-import Queue
+import queue
 import time
 
 '''
@@ -30,7 +30,7 @@ class WorkerThread(threading.Thread):
             self.queue.task_done()
             print("\n\n")
 
-queue = Queue.Queue()
+queue = queue.Queue()
 
 for i in range(5):
     worker = WorkerThread(queue)
