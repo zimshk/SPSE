@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python3
 
 import multiprocessing
 import socket
 
 '''Create a Multi-Threaded Echo Server'''
 
-# multi-processing code from: https://pymotw.com/2/multiprocessing/basics.html
+# multi-processing code from: https://pymotw.com/3/multiprocessing/basics.html
 def simple_server(max_clients, port):
     tcpSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
