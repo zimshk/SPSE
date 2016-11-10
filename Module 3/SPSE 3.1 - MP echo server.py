@@ -3,7 +3,7 @@
 import multiprocessing
 import socket
 
-'''Create a Multi-Threaded Echo Server'''
+'''Create a Multi-Process Echo Server'''
 
 # multi-processing code from: https://pymotw.com/3/multiprocessing/basics.html
 def simple_server(max_clients, port):
