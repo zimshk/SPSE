@@ -30,6 +30,7 @@ def echo_handler(client, address):
             client.close()
             return
 
+# can connect using `ncat 127.0.0.1 8000` from multiple terminal tabs
 tcpSocket = simple_server(3, 8000)
 
 while True:

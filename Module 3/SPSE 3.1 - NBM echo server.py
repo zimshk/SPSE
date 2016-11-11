@@ -19,6 +19,7 @@ def simple_server(max_clients, port):
 
     return tcpSocket
 
+# can connect using `ncat 127.0.0.1 8000` from multiple terminal tabs#!/usr/local/bin/python3
 server = simple_server(3, 8000)
 
 input = [server]

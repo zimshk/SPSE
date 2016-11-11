@@ -31,4 +31,5 @@ def simple_server():
 	print ("Closing connection...")
 	client.close()
 
+# can connect using `ncat 127.0.0.1 8000` from multiple terminal tabs
 simple_server()
