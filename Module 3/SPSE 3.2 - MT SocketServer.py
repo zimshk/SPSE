@@ -6,7 +6,7 @@ import threading
 '''Code up the multi-threaded version of the SocketServer'''
 
 # echo handler taken from 3.1 MT echo server + Vivek's 3.2 video
-# threading taken from: https://pymotw.com/3/socketserver/
+# threading taken from: https://pymotw.com/3/socketserver/#threading-and-forking
 
 class EchoHandler(socketserver.BaseRequestHandler):
     def handle(self):
