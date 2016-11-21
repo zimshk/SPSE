@@ -5,6 +5,8 @@ import socket
 import sys
 import queue
 
+'''Create Non-Blocking Sockets with Select (Multiplexing) Echo Server'''
+
 # select() code from: http://ilab.cs.byu.edu/python/select/echoserver.html
 # TCP server code from: 3-1 echo server
 
