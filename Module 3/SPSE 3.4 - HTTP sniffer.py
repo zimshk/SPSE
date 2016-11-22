@@ -23,6 +23,9 @@ Create a sniffer which uses a filter to only print details of an HTTP packet (TC
 # scroll down to the section that talks about AF_PACKET instead of AF_INET
 # AF_INET works at Layer 3 instead of Layer 2 (skips the ethernet stuff)
 
+# https://docs.python.org/3/library/socket.html
+# is helpful for understanding the various socket.*to* conversion functions
+
 rawSocket = socket.socket(socket.PF_PACKET, socket.SOCK_RAW, socket.htons(0x0800))
 
 def format_mac(mac):
