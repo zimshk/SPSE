@@ -8,7 +8,7 @@ import codecs
 Create a sniffer which uses a filter to only print details of an HTTP packet (TCP, Port 80)
 '''
 
-# written and tested on ubuntu sever 12.04 LTS because macOS doesn't have PF_PACKET
+# written and tested on ubuntu sever 16.04 LTS because macOS doesn't have PF_PACKET
 # I just used python3 -m http.server 80 (or python -m SimpleHTTPServer 80) to create a simple HTTP server to intercept
 
 # I really tried to make the code compatible for both python 2 and 3, but the changes to bytes/unicode/strings got too annoying
@@ -16,8 +16,9 @@ Create a sniffer which uses a filter to only print details of an HTTP packet (TC
 
 # probably the most annoying exercise, if you were to fully complete all the fields
 # I opted just to print out the interesting bits of data in the ethernet, IP, and TCP headers
+
 # Most of this is adapted from Vivek's lab
-# keep that binary data chart from Vivek's notes handy
+# keep this chart handy: https://docs.python.org/2/library/struct.html#format-characters
 
 # this site shows the work you would have to put in to fully parse each field: http://www.binarytides.com/python-packet-sniffer-code-linux/
 # scroll down to the section that talks about AF_PACKET instead of AF_INET
