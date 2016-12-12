@@ -1,0 +1,6 @@
+According to some docs I found online you need to buy a USB wifi dongle to get wifi running in VirtualBox, otherwise the Bridged connection just comes through as Ethernet. I tried to get scapy running under macOS, but quickly found myself in an unescapable library hell.
+
+I did find this gist: https://github.com/adamziaja/python/blob/master/ssid_sniffer.py and this longer blog post by Vivek: http://hackoftheday.securitytube.net/2013/03/wi-fi-sniffer-in-10-lines-of-python.html
+
+I read through and understood both of them, and decided not to spend anymore time trying to get my environment in a state where I can mess around with wifi traffic.
+I'd recommend checking out the dot11.py file within scapy: https://github.com/secdev/scapy/blob/cce88a93b006775957757bd2d311649f4d423863/scapy/layers/dot11.py
