@@ -38,7 +38,7 @@ for i in range(5):
     worker.start()
 
 for site in ftp_sites:
-        queue.put(site)
+    queue.put(site)
 
 queue.join()
 
