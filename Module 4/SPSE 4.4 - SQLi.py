@@ -24,7 +24,6 @@ forms = login_page.soup.find_all('form')
 # Test for SQLi
 # Move onto next field in that form, then next form
 
-
 for form_num, form in enumerate(forms):
 	# attempts to remove fields that can't accept values like: submit/reset
 	inputs = []
