@@ -2,9 +2,8 @@ import clint.textui
 import os.path
 import requests
 
-'''
-How do you monitor the download progress of a very large file?
-'''
+"""How do you monitor the download progress of a very large file?
+"""
 
 # Instead of using urllib etc., I used the requests library
 # I also used clint, which is created by the same guy that made requests
