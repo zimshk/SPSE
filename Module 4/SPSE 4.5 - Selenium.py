@@ -1,5 +1,4 @@
 from selenium import webdriver
-#from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 # Setup: Firefox 50, Selenium 3.0.2, Python 3.5.1
 # You need to add the gecko webdriver somewhere in your $PATH
