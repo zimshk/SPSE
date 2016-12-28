@@ -25,14 +25,14 @@ client = Client("http://10.0.0.171/WebGoat/services/SoapRequest?WSDL", username=
 list_of_methods = [method for method in client.wsdl.services[0].ports[0].methods]
 
 for method in list_of_methods:
-	# dynamically create method calls
-	method_to_call = getattr(client.service, method)
-	
-	for i in range(100, 105):
-		result = method_to_call(i)
-		
-		if result:
-			print("operation: {}, param: {}, result: {}".format(method, i, result))
+    # dynamically create method calls
+    method_to_call = getattr(client.service, method)
+    
+    for i in range(100, 105):
+        result = method_to_call(i)
+        
+        if result:
+            print("operation: {}, param: {}, result: {}".format(method, i, result))
 
 
 # generic code for printing operation info: http://stackoverflow.com/a/1858144
