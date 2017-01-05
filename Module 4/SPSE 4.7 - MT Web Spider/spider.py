@@ -1,41 +1,52 @@
 #!/usr/local/bin/python3
 
-import mechanicalsoup
+import bs4
+import requests
 import threading
 import queue
 from urllib.parse import urlparse
 
-spider_site = "https://leifdreizler.com/"
+def parse_links(page, domain):
+    parsed_domain = urlparse(domain)
+    links = {domain}
 
-br = mechanicalsoup.Browser(soup_config={'features': 'lxml'})
+    for link in [h.get('href') for h in page.find_all('a', href=True)]:
+        parsed_link = urlparse(link)
 
-page = br.get(spider_site)
+        if '#' in link:
+            pass
 
-top_level_links = {spider_site}
+        elif link.startswith('http'):
+            if parsed_link.netloc == parsed_domain.netloc: # stops spider from going "off-site"
+                links.add(link)
 
-def crawl(page):
-	parsed_domain = urlparse(spider_site)
+        elif link.startswith('/'):
+            expanded_link = parsed_domain.scheme + "://" + parsed_domain.netloc + link
+            links.add(expanded_link)
 
-	for link in [h.get('href') for h in page.soup.find_all('a')]:
-		parsed_link = urlparse(link)
+    return links
 
-		if '#' in link:
-			pass
+def recursive_parse(first_page, domain, depth):
 
-		elif link.startswith('http'):
-			if parsed_link.netloc == parsed_domain.netloc:
-				top_level_links.add(link)
-				print(f'Added link: {link}')
+    if depth > 1:
+        top_level_links = parse_links(start_page, parent_url)
+        new_links = set()
 
-		elif link.startswith('/'):
-			expanded_link = parsed_domain.scheme + "://" + parsed_domain.netloc + link
-			top_level_links.add(expanded_link)
-			print(f'{expanded_link}')
+        for link in top_level_links:
+            req = requests.get(link).text
+            page = bs4.BeautifulSoup(req, "lxml", parse_only=bs4.SoupStrainer('a', href=True))
+            new_links |= parse_links(page, parent_url)
+
+        # TODO: add recursive call and depth checking
+
+    else:
+        return top_level_links = parse_links(start_page, parent_url)
 
 
-crawl(page)
+print(new_links)
 
-for each in top_level_links:
-	print(each)
-	
-print(top_level_links)
+parent_url = "https://leifdreizler.com/"
+req = requests.get(parent_url).text
+start_page = bs4.BeautifulSoup(req, "lxml", parse_only=bs4.SoupStrainer('a', href=True))
+
+recursive_parse(start_page, parent_url, 1)
