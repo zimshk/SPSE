@@ -28,8 +28,10 @@ def parse_links(page, domain):
 
 def recursive_parse(first_page, domain, depth):
 
+
+    top_level_links = parse_links(start_page, parent_url)
+
     if depth > 1:
-        top_level_links = parse_links(start_page, parent_url)
         new_links = set()
 
         for link in top_level_links:
@@ -40,10 +42,8 @@ def recursive_parse(first_page, domain, depth):
         # TODO: add recursive call and depth checking
 
     else:
-        return top_level_links = parse_links(start_page, parent_url)
+        return top_level_links
 
-
-print(new_links)
 
 parent_url = "https://leifdreizler.com/"
 req = requests.get(parent_url).text
