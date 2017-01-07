@@ -1,7 +1,6 @@
 #!/usr/local/bin/python3
 
-import bs4
-import requests
+import mechanicalsoup
 import threading
 import queue
 from urllib.parse import urlparse
@@ -10,7 +9,7 @@ def parse_links(page, domain):
     parsed_domain = urlparse(domain)
     links = {domain}
 
-    for link in [h.get('href') for h in page.find_all('a', href=True)]:
+    for link in [h.get('href') for h in page.soup.find_all('a')]:
         parsed_link = urlparse(link)
 
         if '#' in link:
@@ -27,26 +26,36 @@ def parse_links(page, domain):
     return links
 
 def recursive_parse(first_page, domain, depth):
-
-
-    top_level_links = parse_links(start_page, parent_url)
+    top_level_links = parse_links(first_page, parent_url)
 
     if depth > 1:
         new_links = set()
 
-        for link in top_level_links:
-            req = requests.get(link).text
-            page = bs4.BeautifulSoup(req, "lxml", parse_only=bs4.SoupStrainer('a', href=True))
-            new_links |= parse_links(page, parent_url)
+        for i in range (depth):
+            temp = new_links
+            for link in top_level_links:
+                br = mechanicalsoup.Browser(soup_config={'features':'lxml'})
+                page = br.get(link)
+                try:
+                    page.soup # if page isn't html, this will fail
+                    new_links |= parse_links(page, parent_url)
+                except:
+                    continue
 
-        # TODO: add recursive call and depth checking
+            # if not finding any new links, but still have more depth, just break
+            # because the site isn't deep enough
+            if temp == new_links:
+                break
 
-    else:
-        return top_level_links
+            top_level_links |= new_links
+
+
+
+    return top_level_links
 
 
 parent_url = "https://leifdreizler.com/"
-req = requests.get(parent_url).text
-start_page = bs4.BeautifulSoup(req, "lxml", parse_only=bs4.SoupStrainer('a', href=True))
+br = mechanicalsoup.Browser(soup_config={'features':'lxml'})
+req = br.get(parent_url)
 
-recursive_parse(start_page, parent_url, 1)
+print(recursive_parse(req, parent_url, 5))
