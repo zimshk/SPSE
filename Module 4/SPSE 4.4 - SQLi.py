@@ -12,7 +12,8 @@ import mechanicalsoup
 attack_string = "' OR 1=1;-"
 safe_string = "asdf"
 vuln_text = "Characters found after end of SQL statement."
-br = mechanicalsoup.Browser(soup_config={'features': 'lxml'})
+# the user agent part isn't necessary, I just wanted to show how to modify the underlying 'requests' config
+br = mechanicalsoup.Browser(soup_config={'features': 'lxml'}, requests_adapters={'headers':"{'User-agent': 'Mozilla/5.0'}"})
 
 #login_page = br.get("http://demo.testfire.net/bank/login.aspx")
 login_page = br.get("http://demo.testfire.net/feedback.aspx")
